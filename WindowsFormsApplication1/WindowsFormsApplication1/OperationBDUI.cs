@@ -27,6 +27,20 @@ namespace OpenAutomationPlatform
 
             public event PaintEventHandler Paint;
 
+            public Font font
+            {
+                get
+                {
+                    return parent.font;
+                }
+            }
+            public Brush brush
+            {
+                get
+                {
+                    return parent.brush;
+                }
+            }
             public OperationBDUI(RutineBDUI rutineBDUI, AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData operationData)
             {
                 this.parent = rutineBDUI;

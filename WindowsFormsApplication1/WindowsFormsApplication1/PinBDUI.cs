@@ -35,35 +35,6 @@ namespace OpenAutomationPlatform
                 public OperationBDUI parent { get; set; }
                 public Graphics graphics { get { return parent.graphics; } }
                 public PointF position { get; set; }
-                /*public PointF position
-                {
-                    get
-                    {
-                        switch (pin.pinType)
-                        {
-                            case AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData.PinData.PinType.input:
-                                return new PointF(parent.data.position.X,
-                                    parent.data.position.Y +
-                                    parent.parent.form.CreateGraphics().MeasureString(pin.name, parent.parent.font).Height
-                                    * (1 + pin.number));
-                            case AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData.PinData.PinType.output:
-                                return new PointF(parent.data.position.X +
-                                    parent.boxUI.Rectangle.Width,
-                                    parent.data.position.Y +
-                                    parent.parent.form.CreateGraphics().MeasureString(pin.name, parent.parent.font).Height
-                                    * (1 + pin.number));
-                            case AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData.PinData.PinType.status:
-                                return new PointF(parent.data.position.X + parent.boxUI.Rectangle.Width / 2,
-                                    parent.data.position.Y +
-                                    parent.parent.form.CreateGraphics().MeasureString(pin.name, parent.parent.font).Height
-                                    * (1 + pin.number));
-                            default:
-                                throw new Exception("Pin type invalid");
-                        }
-
-                    }
-                }
-                */
                 public bool selected { get; set; }
                 public bool showOnLineValues
                 {
@@ -72,7 +43,20 @@ namespace OpenAutomationPlatform
                         return registerInspection != null && registerInspection.inspecting;
                     }
                 }
-
+                public Font font
+                {
+                    get
+                    {
+                        return parent.font;
+                    }
+                }
+                public Brush brush
+                {
+                    get
+                    {
+                        return parent.brush;
+                    }
+                }
                 public TextBDUI nameBDUI { get; set; }
                 public TextBDUI dataBDUI { get; set; }
                 public TextBDUI onLineValueBDUI { get; set; }
@@ -92,26 +76,28 @@ namespace OpenAutomationPlatform
                     switch (pin.pinType)
                     {
                         case AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData.PinData.PinType.input:
-                            nameBDUI = new TextBDUI(pin.name, TextBDUI.textAlignment.TopRight, operationBDUI.data.position, this);
-                            dataBDUI = new TextBDUI(pin.data, TextBDUI.textAlignment.TopLeft, operationBDUI.data.position, this);
-                            onLineValueBDUI = new TextBDUI("", TextBDUI.textAlignment.BottomLeft, operationBDUI.data.position, this);
+                            nameBDUI = new TextBDUI(this, pin.name,  operationBDUI.data.position, TextBDUI.textAlignment.TopRight);
+                            dataBDUI = new TextBDUI(this, pin.data, operationBDUI.data.position, TextBDUI.textAlignment.TopLeft);
+                            onLineValueBDUI = new TextBDUI(this,"", operationBDUI.data.position, TextBDUI.textAlignment.BottomLeft);
                             break;
                         case AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData.PinData.PinType.output:
-                            nameBDUI = new TextBDUI(pin.name, TextBDUI.textAlignment.TopLeft, operationBDUI.data.position, this);
-                            dataBDUI = new TextBDUI(pin.data, TextBDUI.textAlignment.TopRight, operationBDUI.data.position, this);
-                            onLineValueBDUI = new TextBDUI("", TextBDUI.textAlignment.BottomRight, operationBDUI.data.position, this);
+                            nameBDUI = new TextBDUI(this, pin.name, operationBDUI.data.position, TextBDUI.textAlignment.TopLeft);
+                            dataBDUI = new TextBDUI(this, pin.data, operationBDUI.data.position, TextBDUI.textAlignment.TopRight);
+                            onLineValueBDUI = new TextBDUI(this, "", operationBDUI.data.position, TextBDUI.textAlignment.BottomRight);
                             break;
                         case AutomationWorkspaceData.AutomationPlatformData.RutineData.OperationData.PinData.PinType.status:
-                            nameBDUI = new TextBDUI(pin.name, TextBDUI.textAlignment.BottomLeft, operationBDUI.data.position, this);
-                            dataBDUI = new TextBDUI(pin.data, TextBDUI.textAlignment.BottomRight, operationBDUI.data.position, this);
-                            onLineValueBDUI = new TextBDUI("", TextBDUI.textAlignment.BottomRight, operationBDUI.data.position, this);
+                            nameBDUI = new TextBDUI(this, pin.name, operationBDUI.data.position, TextBDUI.textAlignment.BottomLeft);
+                            dataBDUI = new TextBDUI(this, pin.data, operationBDUI.data.position, TextBDUI.textAlignment.BottomRight);
+                            onLineValueBDUI = new TextBDUI(this, "", operationBDUI.data.position, TextBDUI.textAlignment.BottomRight);
                             break;
                         default:
                             throw new NotSupportedException();
                     }
 
-                    this.parent.parent.Paint += (object sender, System.Windows.Forms.PaintEventArgs e) =>
+                    parent.Paint += (object sender, System.Windows.Forms.PaintEventArgs e) =>
                     {
+                        if (Paint != null)
+                            this.Paint(sender, e);
                     };
                 }
 
